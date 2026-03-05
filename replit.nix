@@ -1,11 +1,19 @@
 { pkgs }: {
   deps = [
-    pkgs.nodejs-18_x
-    pkgs.nodejs_18
     pkgs.nodejs_20
-    pkgs.npm
-    pkgs.yarn
+    pkgs.nodePackages.npm
+    pkgs.postgresql_16
+    pkgs.openssl
     pkgs.python3
-    pkgs.python3Packages.pip
+    pkgs.gnumake
+    pkgs.gcc
   ];
+
+  env = {
+    PGDATA = "/home/runner/postgres_data";
+    PGPORT = "5432";
+    PGUSER = "sniper";
+    PGPASSWORD = "sniperpass";
+    PGDATABASE = "sniperdb";
+  };
 }
