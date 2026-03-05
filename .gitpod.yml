@@ -1,24 +1,56 @@
-# This file is a configuration file for Gitpod
-# https://www.gitpod.io/docs/config-gitpod-file
-
-image: ""
+image: gitpod/workspace-postgres
 
 tasks:
-  - init: npm install
-    command: npm run dev
+  - name: Database
+    init: |
+      docker pull postgres:16-alpine
+    command: |
+      docker run -d \
+        --name sniper_postgres \
+        -e POSTGRES_USER=sniper \
+        -e POSTGRES_PASSWORD=sniperpass \
+        -e POSTGRES_DB=sniperdb \
+        -p 5432:5432 \
+        postgres:16-alpine
+      sleep 5
+      echo "✅ PostgreSQL ready"
+
+  - name: Backend
+    init: |
+      cd backend
+      npm install
+    command: |
+      cd backend
+      cp ../.env.example ../.env 2>/dev/null || true
+      export DATABASE_URL="postgresql://sniper:sniperpass@localhost:5432/sniperdb"
+      export DRY_RUN="true"
+      export NODE_ENV="development"
+      npx prisma migrate dev --name init --skip-seed
+      npm run dev
+
+  - name: Frontend
+    init: |
+      cd frontend
+      npm install
+    command: |
+      cd frontend
+      export VITE_BACKEND_URL="$(gp url 4000)"
+      npm run dev -- --host 0.0.0.0 --port 3000
 
 ports:
   - port: 3000
     onOpen: open-browser
+    visibility: public
+  - port: 4000
+    onOpen: notify
+    visibility: public
+  - port: 5432
+    onOpen: ignore
+    visibility: private
 
 vscode:
   extensions:
+    - prisma.prisma
     - dbaeumer.vscode-eslint
     - esbenp.prettier-vscode
     - bradlc.vscode-tailwindcss
-
-github:
-  prebuilds:
-    addComment: false
-    addBadge: true
-    addLabel: true
