@@ -1,0 +1,28 @@
+tasks:
+  database:
+    init: 
+      image: postgres:16-alpine
+      ports:
+        - 5432
+  backend:
+    init:
+      run: npm install
+      run: npm run dev
+      ports:
+        - 4000
+  frontend:
+    init:
+      run: npm install
+      run: npm run dev
+      ports:
+        - 3000
+ports:
+  - 3000: open-browser
+  - 4000: notify
+  - 5432: private
+vscode:
+  extensions:
+    - Prisma.prisma
+    - dbaeumer.vscode-eslint
+    - esbenp.prettier-vscode
+    - esbenp.tailwindcss
