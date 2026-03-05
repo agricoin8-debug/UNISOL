@@ -1,18 +1,11 @@
-{ 
-  "packages": [ 
-    "nodejs_20", 
-    "npm", 
-    "postgresql_16", 
-    "openssl", 
-    "python3", 
-    "gnumake", 
-    "gcc" 
-  ], 
-  "environment": { 
-    "PGDATA": "/var/lib/postgresql/data", 
-    "PGPORT": "5432", 
-    "PGUSER": "user", 
-    "PGPASSWORD": "password", 
-    "PGDATABASE": "database" 
-  } 
+{ pkgs }: {
+  deps = [
+    pkgs.nodejs-18_x
+    pkgs.nodejs_18
+    pkgs.nodejs_20
+    pkgs.npm
+    pkgs.yarn
+    pkgs.python3
+    pkgs.python3Packages.pip
+  ];
 }
