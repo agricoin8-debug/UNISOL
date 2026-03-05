@@ -1,11 +1,18 @@
-run = "bash start.sh"
-entrypoint = "start.sh"
-[nix] channel = "stable-23_11"
-[env] DATABASE_URL DATABASE_URL = "postgresql://sniper:sniperpass@localhost:5432/sniperdb"
-DRY_RUN = "true"
+run = "npm run dev"
+
+[packager]
+language = "nodejs"
+
+[packager.features]
+packageSearch = true
+guessImports = true
+
+[build]
+build = ["npm", "run", "build"]
+dist = ["npm", "run", "start"]
+
+[nix]
+channel = "stable-22_11"
+
+[env]
 NODE_ENV = "development"
-VITE_BACKEND_URL = "https://$REPL_SLUG.$REPL_OWNER.repl.co"
-PORT = "4000"
-[deployment] run = ["sh", "-c", "bash start.sh"]
-[[ports]] localPort = 3000 externalPort = 80
-[[ports]] localPort = 4000 externalPort = 4000
